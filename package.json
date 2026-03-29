@@ -1,0 +1,14 @@
+{
+  "name": "orbit",
+  "version": "0.1.0",
+  "description": "Orbit is a simple, efficient web project starter.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

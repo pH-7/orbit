@@ -1,0 +1,57 @@
+:root {
+  color-scheme: light;
+  --bg: #f6efe4;
+  --panel: rgba(255, 255, 255, 0.72);
+  --text: #16211d;
+  --muted: #4d5a55;
+  --accent: #c24d2c;
+  --shadow: 0 24px 60px rgba(38, 30, 18, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(194, 77, 44, 0.18), transparent 30%),
+    linear-gradient(135deg, #f8f3ea 0%, var(--bg) 45%, #e9dcc8 100%);
+}
+
+.hero {
+  width: min(720px, calc(100% - 3rem));
+  margin: 10vh auto;
+  padding: 3rem;
+  border: 1px solid rgba(22, 33, 29, 0.08);
+  border-radius: 28px;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 0.94;
+}
+
+.copy {
+  max-width: 40rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
