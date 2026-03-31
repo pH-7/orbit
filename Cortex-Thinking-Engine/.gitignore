@@ -1,0 +1,72 @@
+# Project-specific
+coupons.txt
+weekly_digest_*.md
+
+# Debug / scratch scripts
+_debug*.py
+debug_*.py
+scratch_*.py
+
+# Secrets & environment
+.env
+.env.*
+*.cer
+*.key
+*.p12
+*.p8
+*.pem
+*.secret
+
+# Logs & temp
+*.log
+*.tmp
+tmp/
+
+# Nested duplicate repo (accidental clone)
+Cortex-Thinking-Engine/
+
+# Fastlane config (contains Apple ID, team info)
+CortexOSApp/fastlane/Appfile
+
+# macOS
+._*
+.DS_Store
+
+# Python
+__pycache__/
+*.egg
+*.egg-info/
+*.py[cod]
+.coverage
+.pytest_cache/
+.ruff_cache/
+.venv/
+build/
+dist/
+htmlcov/
+results.xml
+venv/
+
+# Swift / Xcode
+.build/
+.swiftpm/
+*.dSYM
+*.dSYM.zip
+*.xcarchive
+DerivedData/
+xcuserdata/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+CortexOSApp/*.ipa
+CortexOSApp/*.pkg
+CortexOSApp/CortexOS.app/
+CortexOSApp/fastlane/README.md
+CortexOSApp/fastlane/report.xml
+CortexOSApp/generate_icons.py
