@@ -1,6 +1,6 @@
 # Orbit Project™
 
-![Orbit Project logo](/Users/pierre/Code/orbit/assets/orbit-project-logo.svg)
+![Orbit Project logo](assets/orbit-project-logo.svg)
 
 ### Turn any web application into a scalable, maintainable, and successful product
 
