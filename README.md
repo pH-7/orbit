@@ -46,7 +46,7 @@ npm test
 
 ## Continuous Integration
 
-GitHub Actions is configured in [.github/workflows/ci.yml](/Users/pierre/Code/orbit/.github/workflows/ci.yml).
+GitHub Actions is configured in [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
 It runs on pushes to `main` and on pull requests, then:
 
