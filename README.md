@@ -5,12 +5,14 @@ Turn any web application into a scalable, maintainable, and successful product
 
 ![Orbit Project logo](assets/orbit-project-logo.svg)
 
-Orbit is a simple, efficient Node.js web starter built for anyone to use, adapt, and contribute to.
+Orbit is a simple, efficient TypeScript web starter built for anyone to use, adapt, and contribute to.
 
 ## Overview
 
 Orbit now ships as a ready-to-use minimal application with:
 
+- strict TypeScript (latest)
+- PNPM as default package manager
 - multi-page routing
 - a public JSON API
 - zero external runtime dependencies
@@ -31,20 +33,21 @@ Orbit is intended to be open and accessible to anyone. The API responds with per
 ## Run Locally
 
 ```bash
-npm install
-npm run start
+pnpm install
+pnpm run build
+pnpm run start
 ```
 
 For automatic reload during development:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Run the test suite:
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## Continuous Integration
@@ -54,9 +57,10 @@ GitHub Actions is configured in [.github/workflows/ci.yml](.github/workflows/ci.
 It runs on pushes to `main` and on pull requests, then:
 
 - checks out the repository
+- sets up pnpm
 - sets up Node.js
 - installs dependencies
-- runs `npm test`
+- runs `pnpm test`
 
 
 ## Project Structure
@@ -65,12 +69,14 @@ It runs on pushes to `main` and on pull requests, then:
 .
 ├── .github/workflows/ci.yml
 ├── public/styles.css
-├── src/app.js
-├── src/config.js
-├── src/routes.js
-├── src/server.js
-├── src/templates.js
-└── test/routes.test.js
+├── src/app.ts
+├── src/config.ts
+├── src/routes.ts
+├── src/server.ts
+├── src/templates.ts
+├── src/types.ts
+├── test/routes.test.ts
+└── tsconfig.json
 ```
 
 ## Screenshots
