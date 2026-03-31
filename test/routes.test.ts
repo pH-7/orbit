@@ -1,5 +1,5 @@
-import test from 'node:test';
 import assert from 'node:assert/strict';
+import test from 'node:test';
 import { matchRoute } from '../src/routes.js';
 
 test('home route renders successfully', () => {
@@ -17,7 +17,7 @@ test('status route exposes public access and CORS', () => {
   assert.equal(response.status, 200);
   assert.equal(response.headers['access-control-allow-origin'], '*');
 
-  const payload = JSON.parse(response.body);
+  const payload = JSON.parse(response.body) as { publicAccess: boolean; status: string };
   assert.equal(payload.publicAccess, true);
   assert.equal(payload.status, 'ok');
 });

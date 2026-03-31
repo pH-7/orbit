@@ -1,12 +1,13 @@
 import { appConfig } from './config.js';
 import { renderPage } from './templates.js';
+import type { RouteResponse } from './types.js';
 
 const jsonHeaders = {
   'access-control-allow-origin': '*',
   'content-type': 'application/json; charset=utf-8'
 };
 
-function pageResponse(html, status = 200) {
+function pageResponse(html: string, status = 200): RouteResponse {
   return {
     status,
     headers: { 'content-type': 'text/html; charset=utf-8' },
@@ -14,7 +15,7 @@ function pageResponse(html, status = 200) {
   };
 }
 
-function jsonResponse(body, status = 200) {
+function jsonResponse(body: Record<string, unknown>, status = 200): RouteResponse {
   return {
     status,
     headers: jsonHeaders,
@@ -22,7 +23,7 @@ function jsonResponse(body, status = 200) {
   };
 }
 
-export function matchRoute(method, pathname) {
+export function matchRoute(method: string, pathname: string): RouteResponse | null {
   if (method !== 'GET') {
     return null;
   }
@@ -34,11 +35,11 @@ export function matchRoute(method, pathname) {
         eyebrow: appConfig.name,
         headline: 'Launch with a clean starting point.',
         description:
-          'Orbit gives you a minimal Node.js foundation with static pages, a JSON API, and CI-ready structure.',
+          'Orbit gives you a minimal TypeScript foundation with static pages, a JSON API, and CI-ready structure.',
         sections: [
           {
-            title: 'Zero dependencies',
-            body: 'The starter uses only built-in Node.js modules so you can run it immediately.'
+            title: 'Typed by default',
+            body: 'The starter uses strict TypeScript so growth in features does not erode correctness.'
           },
           {
             title: 'Open by default',
@@ -90,15 +91,15 @@ export function matchRoute(method, pathname) {
         sections: [
           {
             title: 'Run locally',
-            body: 'Use npm run start for a stable run and npm run dev during development.'
+            body: 'Use pnpm run start for a stable run and pnpm run dev during development.'
           },
           {
             title: 'Add a route',
-            body: 'Extend matchRoute in src/routes.js or add dedicated modules as the surface area grows.'
+            body: 'Extend matchRoute in src/routes.ts or add dedicated modules as the surface area grows.'
           },
           {
             title: 'Automate checks',
-            body: 'The CI workflow runs the test suite on pushes and pull requests using the same npm test entry point.'
+            body: 'The CI workflow runs the test suite on pushes and pull requests using the same pnpm test entry point.'
           }
         ]
       })
@@ -109,7 +110,7 @@ export function matchRoute(method, pathname) {
     return jsonResponse({
       name: appConfig.name,
       status: 'ok',
-      version: '0.1.0',
+      version: appConfig.version,
       publicAccess: true
     });
   }

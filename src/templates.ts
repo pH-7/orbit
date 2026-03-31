@@ -1,6 +1,7 @@
 import { appConfig } from './config.js';
+import type { PageModel } from './types.js';
 
-function renderNavigation() {
+function renderNavigation(): string {
   return `
     <nav class="site-nav">
       <a href="/" aria-current="page">Home</a>
@@ -17,7 +18,7 @@ export function renderPage({
   headline,
   description,
   sections = []
-}) {
+}: PageModel): string {
   const cards = sections
     .map(
       (section) => `
