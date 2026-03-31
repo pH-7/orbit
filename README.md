@@ -1,8 +1,9 @@
-# Orbit Project™
+
+# Orbit
+
+Turn any web application into a scalable, maintainable, and successful product
 
 ![Orbit Project logo](assets/orbit-project-logo.svg)
-
-### Turn any web application into a scalable, maintainable, and successful product
 
 Orbit is a simple, efficient Node.js web starter built for anyone to use, adapt, and contribute to.
 
@@ -81,6 +82,8 @@ It runs on pushes to `main` and on pull requests, then:
 Designed and developed with ❤️ by **[Pierre-Henry Soria](https://ph7.me)**.  
 Product Engineer building systems for better thinking and decision-making.  
 Roquefort 🧀 and ristretto enthusiast.
+
+---
 
 [![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white&labelColor=000000&color=000000)](https://x.com/phenrysay)
 [![BlueSky](https://img.shields.io/badge/BlueSky-000000?style=for-the-badge&logo=bluesky&logoColor=white&labelColor=000000&color=000000)](https://bsky.app/profile/pierrehenry.dev "Follow Me on BlueSky")
