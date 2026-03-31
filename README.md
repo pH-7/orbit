@@ -1,22 +1,32 @@
 # Orbit Project
 
-Orbit is a simple, efficient web framework boilerplate built for anyone to use, adapt, and contribute to.
+Orbit is a simple, efficient Node.js web starter built for anyone to use, adapt, and contribute to.
 
 ## Overview
 
-Orbit aims to provide a clean starting point for building web projects without unnecessary complexity.
+Orbit now ships as a ready-to-use minimal application with:
+
+- multi-page routing
+- a public JSON API
+- zero external runtime dependencies
+- a built-in test suite
+- GitHub Actions CI
 
 ## Accessibility
 
-Orbit is intended to be open and accessible to anyone. You should be able to use it freely as a starting point for your own work and extend it based on your needs.
+Orbit is intended to be open and accessible to anyone. The API responds with permissive CORS headers so it can be consumed from anywhere.
 
-## First Step
+## Included Routes
 
-Orbit now includes a minimal zero-dependency Node.js server and a starter landing page.
+- `/` home page
+- `/features` feature overview
+- `/docs` starter documentation
+- `/api/status` JSON health and metadata endpoint
 
 ## Run Locally
 
 ```bash
+npm install
 npm run start
 ```
 
@@ -24,6 +34,37 @@ For automatic reload during development:
 
 ```bash
 npm run dev
+```
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+## Continuous Integration
+
+GitHub Actions is configured in [.github/workflows/ci.yml](/Users/pierre/Code/orbit/.github/workflows/ci.yml).
+
+It runs on pushes to `main` and on pull requests, then:
+
+- checks out the repository
+- sets up Node.js
+- installs dependencies
+- runs `npm test`
+
+## Project Structure
+
+```text
+.
+├── .github/workflows/ci.yml
+├── public/styles.css
+├── src/app.js
+├── src/config.js
+├── src/routes.js
+├── src/server.js
+├── src/templates.js
+└── test/routes.test.js
 ```
 
 ## 👨‍🍳 Author
