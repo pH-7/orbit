@@ -1,0 +1,41 @@
+<svg width="1200" height="640" viewBox="0 0 1200 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="orbitTitle orbitDesc">
+  <title id="orbitTitle">Orbit Project logo</title>
+  <desc id="orbitDesc">A bold orbital emblem with a warm sunrise gradient and the Orbit Project wordmark.</desc>
+  <defs>
+    <linearGradient id="bg" x1="180" y1="80" x2="1020" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF5E6"/>
+      <stop offset="0.5" stop-color="#F5E3C8"/>
+      <stop offset="1" stop-color="#E7D0B3"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="322" y1="178" x2="540" y2="440" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F47C3C"/>
+      <stop offset="1" stop-color="#B9381E"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="206" y1="132" x2="664" y2="478" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#243B35"/>
+      <stop offset="1" stop-color="#51645E"/>
+    </linearGradient>
+    <filter id="shadow" x="102" y="76" width="1006" height="488" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="20"/>
+      <feGaussianBlur stdDeviation="28"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.192157 0 0 0 0 0.133333 0 0 0 0 0.0745098 0 0 0 0.18 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="640" rx="40" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <rect x="158" y="132" width="884" height="376" rx="32" fill="#FFFCF7" fill-opacity="0.72"/>
+    <ellipse cx="391" cy="320" rx="166" ry="118" fill="url(#sun)"/>
+    <path d="M535.017 163.154C454.29 109.935 325.287 112.813 246.88 179.458C168.474 246.103 160.405 351.602 228.859 415.141C297.313 478.68 417.387 485.082 507.276 434.036C597.164 382.989 633.57 289.184 594.122 208.991" stroke="url(#ring)" stroke-width="24" stroke-linecap="round"/>
+    <circle cx="555" cy="216" r="20" fill="#243B35"/>
+    <circle cx="555" cy="216" r="8" fill="#FFFCF7"/>
+    <path d="M638 223H912" stroke="#243B35" stroke-width="4" stroke-linecap="round" opacity="0.18"/>
+    <path d="M638 410H866" stroke="#243B35" stroke-width="4" stroke-linecap="round" opacity="0.12"/>
+    <text x="632" y="280" fill="#16211D" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="700" letter-spacing="1">ORBIT</text>
+    <text x="638" y="340" fill="#B9381E" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="7.2">PROJECT</text>
+    <text x="638" y="392" fill="#4D5A55" font-family="Helvetica, Arial, sans-serif" font-size="28">Launch clean. Grow with intent.</text>
+  </g>
+</svg>
