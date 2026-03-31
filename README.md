@@ -1,5 +1,7 @@
 # Orbit Project™
 
+![Orbit Project logo](/Users/pierre/Code/orbit/assets/orbit-project-logo.svg)
+
 ### Turn any web application into a scalable, maintainable, and successful product
 
 Orbit is a simple, efficient Node.js web starter built for anyone to use, adapt, and contribute to.
@@ -55,6 +57,7 @@ It runs on pushes to `main` and on pull requests, then:
 - installs dependencies
 - runs `npm test`
 
+
 ## Project Structure
 
 ```text
@@ -68,6 +71,10 @@ It runs on pushes to `main` and on pull requests, then:
 ├── src/templates.js
 └── test/routes.test.js
 ```
+
+## Screenshots
+
+![Orbit Project Screenshot](assets/orbit-project.png)
 
 ## 👨‍🍳 Author
 
