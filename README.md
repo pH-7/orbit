@@ -80,12 +80,11 @@ It runs on pushes to `main` and on pull requests, then:
 
 Designed and developed with lots of ❤️ by **[Pierre-Henry Soria](https://ph7.me)**. A **SUPER Passionate** Belgian Software Engineer 🍫🍺
 
-[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/phenrysay)
-[![BlueSky](https://img.shields.io/badge/BlueSky-0285FF?style=for-the-badge&logo=bluesky&logoColor=white)](https://bsky.app/profile/pierrehenry.dev "Follow Me on BlueSky")
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pH-7)
-[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X457W3L7DAPC6)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white&labelColor=000000&color=000000)](https://x.com/phenrysay)
+[![BlueSky](https://img.shields.io/badge/BlueSky-000000?style=for-the-badge&logo=bluesky&logoColor=white&labelColor=000000&color=000000)](https://bsky.app/profile/pierrehenry.dev "Follow Me on BlueSky")
+[![GitHub](https://img.shields.io/badge/GitHub-000000?style=for-the-badge&logo=github&logoColor=white&labelColor=000000&color=000000)](https://github.com/pH-7)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-000000?style=for-the-badge&logo=kofi&logoColor=white&labelColor=000000&color=000000)](https://ko-fi.com/phenry)
 
 
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ph7enry/ "Pierre-Henry Soria LinkedIn")
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/61426874095?text=I%27m%20looking%20for%20a%20software%20engineer%20like%20you)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-000000?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=000000&color=000000)](https://www.linkedin.com/in/ph7enry/ "Pierre-Henry Soria LinkedIn")
