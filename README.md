@@ -1,4 +1,6 @@
-# Orbit Project
+# Orbit Project™
+
+### Turn any web application into a scalable, maintainable, and successful product
 
 Orbit is a simple, efficient Node.js web starter built for anyone to use, adapt, and contribute to.
 
