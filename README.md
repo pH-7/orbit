@@ -80,8 +80,12 @@ It runs on pushes to `main` and on pull requests, then:
 
 Designed and developed with lots of ❤️ by **[Pierre-Henry Soria](https://ph7.me)**. A **SUPER Passionate** Belgian Software Engineer 🍫🍺
 
-[![@phenrysay][x-badge]](https://x.com/phenrysay) [![BlueSky][bsky-badge]](https://bsky.app/profile/pierrehenry.dev "Follow Me on BlueSky") [![pH-7][github-badge]](https://github.com/pH-7) [![PayPal][paypal-badge]](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X457W3L7DAPC6)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/phenrysay)
+[![BlueSky](https://img.shields.io/badge/BlueSky-0285FF?style=for-the-badge&logo=bluesky&logoColor=white)](https://bsky.app/profile/pierrehenry.dev "Follow Me on BlueSky")
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pH-7)
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X457W3L7DAPC6)
 
 
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ph7enry/ "Pierre-Henry Soria LinkedIn") [![Whatsapp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/61426874095?text=I%27m%20looking%20for%20a%20software%20engineer%20like%20you)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ph7enry/ "Pierre-Henry Soria LinkedIn")
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/61426874095?text=I%27m%20looking%20for%20a%20software%20engineer%20like%20you)
