@@ -1,5 +1,5 @@
 
-# Orbit
+# Orbit - Launch-Ready TypeScript Framework
 
 Turn any web application into a scalable, maintainable, and successful product
 
@@ -48,35 +48,6 @@ Run the test suite:
 
 ```bash
 pnpm test
-```
-
-## Continuous Integration
-
-GitHub Actions is configured in [.github/workflows/ci.yml](.github/workflows/ci.yml).
-
-It runs on pushes to `main` and on pull requests, then:
-
-- checks out the repository
-- sets up pnpm
-- sets up Node.js
-- installs dependencies
-- runs `pnpm test`
-
-
-## Project Structure
-
-```text
-.
-├── .github/workflows/ci.yml
-├── public/styles.css
-├── src/app.ts
-├── src/config.ts
-├── src/routes.ts
-├── src/server.ts
-├── src/templates.ts
-├── src/types.ts
-├── test/routes.test.ts
-└── tsconfig.json
 ```
 
 ## Screenshots
