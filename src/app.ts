@@ -2,12 +2,10 @@ import { createReadStream, existsSync } from 'node:fs';
 import type { IncomingMessage, RequestListener, ServerResponse } from 'node:http';
 import { stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { matchRoute } from './routes.js';
 import type { RouteResponse } from './types.js';
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const publicDir = normalize(join(__dirname, '..', 'public'));
+const publicDir = normalize(join(process.cwd(), 'public'));
 
 const contentTypes: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
