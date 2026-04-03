@@ -37,4 +37,4 @@ jobs:
         run: pnpm run build
 
       - name: Run tests
-        run: node --test dist/test/**/*.test.js
+        run: node --test dist/test/*.test.js
