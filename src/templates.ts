@@ -1,6 +1,18 @@
 import { appConfig } from './config.js';
 import type { PageModel } from './types.js';
 
+const htmlEscapeMap: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+};
+
+export function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => htmlEscapeMap[character]);
+}
+
 function renderNavigation(): string {
   return `
     <nav class="site-nav">
@@ -19,12 +31,16 @@ export function renderPage({
   description,
   sections = []
 }: PageModel): string {
+  const safeTitle = escapeHtml(title);
+  const safeEyebrow = escapeHtml(eyebrow);
+  const safeHeadline = escapeHtml(headline);
+  const safeDescription = escapeHtml(description);
   const cards = sections
     .map(
       (section) => `
         <article class="card">
-          <h2>${section.title}</h2>
-          <p>${section.body}</p>
+          <h2>${escapeHtml(section.title)}</h2>
+          <p>${escapeHtml(section.body)}</p>
         </article>
       `
     )
@@ -35,17 +51,17 @@ export function renderPage({
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${title} | ${appConfig.name}</title>
-    <meta name="description" content="${description}" />
+    <title>${safeTitle} | ${appConfig.name}</title>
+    <meta name="description" content="${safeDescription}" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main class="shell">
       ${renderNavigation()}
       <section class="hero">
-        <p class="eyebrow">${eyebrow}</p>
-        <h1>${headline}</h1>
-        <p class="copy">${description}</p>
+        <p class="eyebrow">${safeEyebrow}</p>
+        <h1>${safeHeadline}</h1>
+        <p class="copy">${safeDescription}</p>
       </section>
       <section class="grid">
         ${cards}

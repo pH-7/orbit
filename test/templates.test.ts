@@ -103,3 +103,20 @@ test('renderPage links the stylesheet', () => {
 
   assert.match(html, /<link rel="stylesheet" href="\/styles\.css" \/>/);
 });
+
+test('renderPage escapes HTML-sensitive text', () => {
+  const html = renderPage({
+    title: '<script>alert("title")</script>',
+    eyebrow: '<b>eyebrow</b>',
+    headline: 'Launch & grow',
+    description: 'Use "quotes" and <tags>',
+    sections: [{ title: '<Card>', body: "It's safe" }]
+  });
+
+  assert.ok(!html.includes('<script>alert("title")</script>'));
+  assert.ok(!html.includes('<b>eyebrow</b>'));
+  assert.match(html, /&lt;script&gt;alert\(&quot;title&quot;\)&lt;\/script&gt;/);
+  assert.match(html, /Launch &amp; grow/);
+  assert.match(html, /Use &quot;quotes&quot; and &lt;tags&gt;/);
+  assert.match(html, /It&#39;s safe/);
+});
