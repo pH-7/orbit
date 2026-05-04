@@ -12,11 +12,11 @@
     "test": "pnpm run build && node --test dist/test/*.test.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "tsx": "latest",
-    "typescript": "latest"
+    "@types/node": "^22.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
   }
 }
