@@ -68,34 +68,7 @@ pnpm run build
 
 ## Continuous Integration
 
-GitHub Actions is configured in `.github/workflows/ci.yml`.
-
-The pipeline runs on pushes to `main` and on pull requests, then:
-
-- sets up PNPM 10.33.0
-- checks Node.js 22 and 24
-- installs dependencies with `pnpm install --frozen-lockfile`
-- builds the TypeScript project
-- runs the compiled test suite
-
-## Core Project Structure
-
-```text
-.
-├── .github/workflows/ci.yml
-├── assets/
-├── public/styles.css
-├── src/app.ts
-├── src/config.ts
-├── src/routes.ts
-├── src/server.ts
-├── src/templates.ts
-├── src/types.ts
-├── test/
-├── package.json
-├── pnpm-lock.yaml
-└── tsconfig.json
-```
+GitHub Actions runs the build and test suite against Node.js 22 and 24 on every push to `main` and on pull requests. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Screenshots
 
