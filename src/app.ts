@@ -1,11 +1,11 @@
 import { createReadStream, existsSync } from 'node:fs';
 import type { IncomingMessage, RequestListener, ServerResponse } from 'node:http';
 import { stat } from 'node:fs/promises';
-import { extname, join, normalize } from 'node:path';
+import { extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { matchRoute } from './routes.js';
 import type { RouteResponse } from './types.js';
 
-const publicDir = normalize(join(process.cwd(), 'public'));
+const publicDir = resolve(process.cwd(), 'public');
 
 const contentTypes: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
@@ -17,11 +17,24 @@ const contentTypes: Record<string, string> = {
   '.txt': 'text/plain; charset=utf-8'
 };
 
-function resolvePath(urlPath: string): string | null {
-  const pathname = urlPath === '/' ? '/index.html' : urlPath;
-  const safePath = normalize(join(publicDir, pathname));
+function isInsideDirectory(directory: string, targetPath: string): boolean {
+  const pathFromDirectory = relative(directory, targetPath);
 
-  if (!safePath.startsWith(publicDir)) {
+  return pathFromDirectory === '' || (!pathFromDirectory.startsWith('..') && !isAbsolute(pathFromDirectory));
+}
+
+function resolvePath(urlPath: string): string | null {
+  let pathname: string;
+
+  try {
+    pathname = decodeURIComponent(urlPath === '/' ? '/index.html' : urlPath);
+  } catch {
+    return null;
+  }
+
+  const safePath = resolve(join(publicDir, `.${pathname}`));
+
+  if (!isInsideDirectory(publicDir, safePath)) {
     return null;
   }
 
