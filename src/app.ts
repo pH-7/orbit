@@ -41,41 +41,49 @@ function resolvePath(urlPath: string): string | null {
   return safePath;
 }
 
-function send(response: ServerResponse, route: RouteResponse): void {
+function send(response: ServerResponse, route: RouteResponse, includeBody = true): void {
   response.writeHead(route.status, route.headers);
-  response.end(route.body);
+  response.end(includeBody ? route.body : undefined);
 }
 
-async function sendStaticAsset(pathname: string, response: ServerResponse): Promise<boolean> {
+async function sendStaticAsset(pathname: string, response: ServerResponse, includeBody = true): Promise<boolean> {
   const filePath = resolvePath(pathname);
 
   if (!filePath || !existsSync(filePath)) {
     return false;
   }
 
-  const fileStats = await stat(filePath);
+  const fileStats = await stat(filePath).catch(() => null);
 
-  if (!fileStats.isFile()) {
+  if (!fileStats?.isFile()) {
     return false;
   }
 
   const extension = extname(filePath);
   const contentType = contentTypes[extension] || 'application/octet-stream';
   response.writeHead(200, { 'content-type': contentType });
+
+  if (!includeBody) {
+    response.end();
+    return true;
+  }
+
   createReadStream(filePath).pipe(response);
   return true;
 }
 
 async function handleRequest(request: IncomingMessage, response: ServerResponse): Promise<void> {
+  const method = request.method || 'GET';
   const url = new URL(request.url || '/', 'http://localhost');
-  const route = matchRoute(request.method || 'GET', url.pathname);
+  const route = matchRoute(method, url.pathname);
+  const includeBody = method !== 'HEAD';
 
   if (route) {
-    send(response, route);
+    send(response, route, includeBody);
     return;
   }
 
-  const servedStaticAsset = await sendStaticAsset(url.pathname, response);
+  const servedStaticAsset = await sendStaticAsset(url.pathname, response, includeBody);
 
   if (servedStaticAsset) {
     return;
