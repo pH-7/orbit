@@ -13,6 +13,7 @@ Orbit now ships as a ready-to-use minimal application with:
 
 - strict TypeScript (latest)
 - PNPM as default package manager
+- Node.js 22+ runtime targeting
 - multi-page routing
 - a public JSON API
 - zero external runtime dependencies
