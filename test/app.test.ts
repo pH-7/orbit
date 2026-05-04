@@ -1,25 +1,29 @@
 import assert from 'node:assert/strict';
 import { after, before, describe, test } from 'node:test';
-import { createServer, type Server } from 'node:http';
+import { createServer, request as httpRequest, type Server } from 'node:http';
 import { createApp } from '../src/app.js';
 
-function fetch(url: string): Promise<{ status: number; headers: Record<string, string>; body: string }> {
+function request(
+  url: string,
+  method = 'GET'
+): Promise<{ status: number; headers: Record<string, string>; body: string }> {
   return new Promise((resolve, reject) => {
-    const req = import('node:http').then((http) => {
-      http.get(url, (res) => {
-        let data = '';
-        res.on('data', (chunk: Buffer) => { data += chunk.toString(); });
-        res.on('end', () => {
-          const headers: Record<string, string> = {};
-          for (const [key, val] of Object.entries(res.headers)) {
-            if (typeof val === 'string') headers[key] = val;
-          }
-          resolve({ status: res.statusCode ?? 0, headers, body: data });
-        });
-        res.on('error', reject);
+    const req = httpRequest(url, { method }, (res) => {
+      let data = '';
+      res.on('data', (chunk: Buffer) => {
+        data += chunk.toString();
       });
+      res.on('end', () => {
+        const headers: Record<string, string> = {};
+        for (const [key, val] of Object.entries(res.headers)) {
+          if (typeof val === 'string') headers[key] = val;
+        }
+        resolve({ status: res.statusCode ?? 0, headers, body: data });
+      });
+      res.on('error', reject);
     });
-    void req;
+    req.on('error', reject);
+    req.end();
   });
 }
 
@@ -44,26 +48,33 @@ describe('HTTP integration tests', () => {
   });
 
   test('GET / returns 200 with HTML content', async () => {
-    const res = await fetch(`${baseUrl}/`);
+    const res = await request(`${baseUrl}/`);
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'] ?? '', /text\/html/);
     assert.match(res.body, /<!doctype html>/i);
   });
 
+  test('HEAD / returns headers without a response body', async () => {
+    const res = await request(`${baseUrl}/`, 'HEAD');
+    assert.equal(res.status, 200);
+    assert.match(res.headers['content-type'] ?? '', /text\/html/);
+    assert.equal(res.body, '');
+  });
+
   test('GET /features returns 200', async () => {
-    const res = await fetch(`${baseUrl}/features`);
+    const res = await request(`${baseUrl}/features`);
     assert.equal(res.status, 200);
     assert.match(res.body, /Capabilities/);
   });
 
   test('GET /docs returns 200', async () => {
-    const res = await fetch(`${baseUrl}/docs`);
+    const res = await request(`${baseUrl}/docs`);
     assert.equal(res.status, 200);
     assert.match(res.body, /Documentation/);
   });
 
   test('GET /api/status returns JSON with correct structure', async () => {
-    const res = await fetch(`${baseUrl}/api/status`);
+    const res = await request(`${baseUrl}/api/status`);
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'] ?? '', /application\/json/);
     assert.equal(res.headers['access-control-allow-origin'], '*');
@@ -75,37 +86,46 @@ describe('HTTP integration tests', () => {
     assert.equal(payload.publicAccess, true);
   });
 
+  test('OPTIONS /api/status returns CORS preflight headers', async () => {
+    const res = await request(`${baseUrl}/api/status`, 'OPTIONS');
+    assert.equal(res.status, 204);
+    assert.equal(res.headers['access-control-allow-origin'], '*');
+    assert.equal(res.headers['access-control-allow-methods'], 'GET, HEAD, OPTIONS');
+  });
+
   test('GET /styles.css serves the static stylesheet', async () => {
-    const res = await fetch(`${baseUrl}/styles.css`);
+    const res = await request(`${baseUrl}/styles.css`);
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'] ?? '', /text\/css/);
     assert.match(res.body, /:root/);
   });
 
+  test('HEAD /styles.css returns static headers without a body', async () => {
+    const res = await request(`${baseUrl}/styles.css`, 'HEAD');
+    assert.equal(res.status, 200);
+    assert.match(res.headers['content-type'] ?? '', /text\/css/);
+    assert.equal(res.body, '');
+  });
+
   test('GET /nonexistent returns 404', async () => {
-    const res = await fetch(`${baseUrl}/nonexistent`);
+    const res = await request(`${baseUrl}/nonexistent`);
     assert.equal(res.status, 404);
     assert.match(res.body, /Orbit could not find that page/);
   });
 
-  test('POST method to / returns 404 (only GET is routed)', async () => {
-    const res = await new Promise<{ status: number; body: string }>((resolve, reject) => {
-      import('node:http').then((http) => {
-        const req = http.request(`${baseUrl}/`, { method: 'POST' }, (res) => {
-          let data = '';
-          res.on('data', (chunk: Buffer) => { data += chunk.toString(); });
-          res.on('end', () => resolve({ status: res.statusCode ?? 0, body: data }));
-          res.on('error', reject);
-        });
-        req.end();
-      }).catch(reject);
-    });
-    assert.equal(res.status, 404);
+  test('POST method to / returns 405 for known routes', async () => {
+    const res = await request(`${baseUrl}/`, 'POST');
+    assert.equal(res.status, 405);
+    assert.equal(res.headers.allow, 'GET, HEAD');
   });
 
   test('path traversal attempt is blocked', async () => {
-    const res = await fetch(`${baseUrl}/../package.json`);
-    // Should either 404 or not serve the file
+    const res = await request(`${baseUrl}/../package.json`);
+    assert.ok(res.status === 404 || !res.body.includes('"name": "orbit"'));
+  });
+
+  test('encoded path traversal attempt is blocked', async () => {
+    const res = await request(`${baseUrl}/%2e%2e/package.json`);
     assert.ok(res.status === 404 || !res.body.includes('"name": "orbit"'));
   });
 });
