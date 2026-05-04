@@ -33,11 +33,20 @@ Orbit is intended to be open and accessible to anyone. The API responds with per
 
 ## Run Locally
 
+Use Node.js 22 or newer. If you use a version manager, the project includes `.node-version`.
+
 ```bash
 pnpm install
-pnpm run build
-pnpm run start
+pnpm start
 ```
+
+By default the server binds to `127.0.0.1:3000`. Override it with `HOST` and `PORT` when needed:
+
+```bash
+HOST=0.0.0.0 PORT=8080 pnpm start
+```
+
+Use `PORT=0` if you want Node.js to pick an available port automatically.
 
 For automatic reload during development:
 
