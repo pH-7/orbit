@@ -2,8 +2,6 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { matchRoute } from '../src/routes.js';
 
-// ── Home ────────────────────────────────────────────────
-
 test('home route renders successfully', () => {
   const response = matchRoute('GET', '/');
 
@@ -19,7 +17,13 @@ test('home route sets HTML content-type', () => {
   assert.match(response.headers['content-type'] ?? '', /text\/html/);
 });
 
-// ── Features ────────────────────────────────────────────
+test('home route supports HEAD requests', () => {
+  const response = matchRoute('HEAD', '/');
+
+  assert.ok(response);
+  assert.equal(response.status, 200);
+  assert.match(response.headers['content-type'] ?? '', /text\/html/);
+});
 
 test('features route returns 200 with page content', () => {
   const response = matchRoute('GET', '/features');
@@ -29,8 +33,6 @@ test('features route returns 200 with page content', () => {
   assert.match(response.body, /Small surface area/);
 });
 
-// ── Docs ────────────────────────────────────────────────
-
 test('docs route returns 200 with page content', () => {
   const response = matchRoute('GET', '/docs');
 
@@ -38,8 +40,6 @@ test('docs route returns 200 with page content', () => {
   assert.equal(response.status, 200);
   assert.match(response.body, /Start, extend, and ship Orbit/);
 });
-
-// ── API status ──────────────────────────────────────────
 
 test('status route exposes public access and CORS', () => {
   const response = matchRoute('GET', '/api/status');
@@ -68,7 +68,14 @@ test('status body includes name and version', () => {
   assert.equal(typeof payload.version, 'string');
 });
 
-// ── Missing / non-GET ───────────────────────────────────
+test('status route supports CORS preflight', () => {
+  const response = matchRoute('OPTIONS', '/api/status');
+
+  assert.ok(response);
+  assert.equal(response.status, 204);
+  assert.equal(response.headers['access-control-allow-origin'], '*');
+  assert.equal(response.headers.allow, 'GET, HEAD, OPTIONS');
+});
 
 test('unknown routes return null for server fallback handling', () => {
   const response = matchRoute('GET', '/missing');
@@ -76,20 +83,29 @@ test('unknown routes return null for server fallback handling', () => {
   assert.equal(response, null);
 });
 
-test('POST method returns null', () => {
-  assert.equal(matchRoute('POST', '/'), null);
-  assert.equal(matchRoute('POST', '/api/status'), null);
+test('POST method returns 405 for known routes', () => {
+  const homeResponse = matchRoute('POST', '/');
+  const apiResponse = matchRoute('POST', '/api/status');
+
+  assert.ok(homeResponse);
+  assert.ok(apiResponse);
+  assert.equal(homeResponse.status, 405);
+  assert.equal(apiResponse.status, 405);
 });
 
-test('PUT method returns null', () => {
-  assert.equal(matchRoute('PUT', '/'), null);
+test('PUT method returns 405 for known routes', () => {
+  const response = matchRoute('PUT', '/');
+
+  assert.ok(response);
+  assert.equal(response.status, 405);
 });
 
-test('DELETE method returns null', () => {
-  assert.equal(matchRoute('DELETE', '/features'), null);
-});
+test('DELETE method returns 405 for known routes', () => {
+  const response = matchRoute('DELETE', '/features');
 
-// ── All page routes return well-formed HTML ─────────────
+  assert.ok(response);
+  assert.equal(response.status, 405);
+});
 
 test('all page routes produce valid HTML structure', () => {
   const pages = ['/', '/features', '/docs'];

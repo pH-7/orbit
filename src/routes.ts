@@ -4,8 +4,12 @@ import type { RouteResponse } from './types.js';
 
 const jsonHeaders = {
   'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, HEAD, OPTIONS',
+  'access-control-allow-headers': 'content-type',
   'content-type': 'application/json; charset=utf-8'
 };
+
+const routedPaths = new Set(['/', '/features', '/docs', '/api/status']);
 
 function pageResponse(html: string, status = 200): RouteResponse {
   return {
@@ -23,9 +27,35 @@ function jsonResponse(body: Record<string, unknown>, status = 200): RouteRespons
   };
 }
 
+function methodNotAllowedResponse(): RouteResponse {
+  return {
+    status: 405,
+    headers: {
+      allow: 'GET, HEAD',
+      'content-type': 'text/plain; charset=utf-8'
+    },
+    body: 'Method not allowed.'
+  };
+}
+
+function optionsResponse(): RouteResponse {
+  return {
+    status: 204,
+    headers: {
+      ...jsonHeaders,
+      allow: 'GET, HEAD, OPTIONS'
+    },
+    body: ''
+  };
+}
+
 export function matchRoute(method: string, pathname: string): RouteResponse | null {
-  if (method !== 'GET') {
-    return null;
+  if (method === 'OPTIONS' && pathname === '/api/status') {
+    return optionsResponse();
+  }
+
+  if (method !== 'GET' && method !== 'HEAD') {
+    return routedPaths.has(pathname) ? methodNotAllowedResponse() : null;
   }
 
   if (pathname === '/') {
