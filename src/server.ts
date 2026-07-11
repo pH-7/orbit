@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { createServer } from 'node:http';
 import { createApp } from './app.js';
 import { appConfig } from './config.js';

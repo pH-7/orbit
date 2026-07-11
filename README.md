@@ -66,9 +66,38 @@ Build without starting the server:
 pnpm run build
 ```
 
+## npm Package
+
+Install from npm:
+
+```bash
+pnpm add @ph7/orbit
+```
+
+Run the starter server:
+
+```bash
+pnpm dlx @ph7/orbit
+```
+
+Import framework primitives:
+
+```ts
+import { createApp } from '@ph7/orbit';
+```
+
 ## Continuous Integration
 
 GitHub Actions runs the build and test suite against Node.js 22 and 24 on every push to `main` and on pull requests. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+
+## npm Release Pipeline
+
+Publishing is handled by [`.github/workflows/publish.yml`](.github/workflows/publish.yml). Configure npm trusted publishing or add `NPM_TOKEN`, then release with:
+
+```bash
+pnpm version patch
+git push origin main --follow-tags
+```
 
 ## Screenshots
 
