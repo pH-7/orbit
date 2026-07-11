@@ -4,6 +4,7 @@
   "description": "Orbit is a simple, efficient TypeScript web starter.",
   "type": "module",
   "author": "Pierre-Henry Soria <hi@ph7.me> (https://ph7.me)",
+  "license": "MIT",
   "homepage": "https://github.com/pH-7/orbit#readme",
   "bugs": {
     "url": "https://github.com/pH-7/orbit/issues"
