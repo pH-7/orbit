@@ -10,7 +10,7 @@ export function resolvePort(value = process.env.PORT): number {
 
 export const appConfig = {
   name: 'Orbit',
-  version: '0.1.0',
+  version: '0.2.0',
   description: 'A small TypeScript starter focused on clarity, speed, and zero runtime dependencies.',
   host: process.env.HOST || '127.0.0.1',
   port: resolvePort()

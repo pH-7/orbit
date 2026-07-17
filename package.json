@@ -1,6 +1,6 @@
 {
   "name": "@ph7/orbit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Orbit is a simple, efficient TypeScript web starter.",
   "type": "module",
   "author": "Pierre-Henry Soria <hi@ph7.me> (https://ph7.me)",
