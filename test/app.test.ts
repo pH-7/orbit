@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { after, before, describe, test } from 'node:test';
 import { createServer, request as httpRequest, type Server } from 'node:http';
 import { createApp } from '../src/app.js';
+import type { OrbitAppOptions } from '../src/types.js';
 
 function request(
   url: string,
@@ -25,6 +26,23 @@ function request(
     req.on('error', reject);
     req.end();
   });
+}
+
+async function withApp(
+  options: OrbitAppOptions,
+  run: (baseUrl: string) => Promise<void>
+): Promise<void> {
+  const appServer = createServer(createApp(options));
+
+  await new Promise<void>((resolve) => appServer.listen(0, '127.0.0.1', resolve));
+  const address = appServer.address();
+  const port = typeof address === 'object' && address ? address.port : 0;
+
+  try {
+    await run(`http://127.0.0.1:${port}`);
+  } finally {
+    await new Promise<void>((resolve) => appServer.close(() => resolve()));
+  }
 }
 
 describe('HTTP integration tests', () => {
@@ -127,5 +145,81 @@ describe('HTTP integration tests', () => {
   test('encoded path traversal attempt is blocked', async () => {
     const res = await request(`${baseUrl}/%2e%2e/package.json`);
     assert.ok(res.status === 404 || !res.body.includes('"name": "orbit"'));
+  });
+
+  test('custom routes can replace the built-in website', async () => {
+    await withApp(
+      {
+        publicDir: false,
+        route: ({ method, url }) => {
+          if (method === 'GET' && url.pathname === '/') {
+            return {
+              status: 200,
+              headers: { 'content-type': 'text/html; charset=utf-8' },
+              body: `<h1>${url.searchParams.get('name') ?? 'Custom Orbit app'}</h1>`
+            };
+          }
+
+          return null;
+        }
+      },
+      async (customBaseUrl) => {
+        const res = await request(`${customBaseUrl}/?name=Launchpad`);
+        assert.equal(res.status, 200);
+        assert.match(res.body, /Launchpad/);
+        assert.doesNotMatch(res.body, /Launch with a clean starting point/);
+      }
+    );
+  });
+
+  test('custom route handlers may resolve asynchronously', async () => {
+    await withApp(
+      {
+        publicDir: false,
+        route: async ({ url }) => {
+          if (url.pathname !== '/api/demo') return null;
+
+          return {
+            status: 200,
+            headers: { 'content-type': 'application/json; charset=utf-8' },
+            body: JSON.stringify({ status: 'ok' })
+          };
+        }
+      },
+      async (customBaseUrl) => {
+        const res = await request(`${customBaseUrl}/api/demo`);
+        assert.equal(res.status, 200);
+        assert.deepEqual(JSON.parse(res.body), { status: 'ok' });
+      }
+    );
+  });
+
+  test('custom not-found handlers receive request context', async () => {
+    await withApp(
+      {
+        publicDir: false,
+        route: () => null,
+        notFound: ({ url }) => ({
+          status: 404,
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+          body: `<h1>Missing ${url.pathname}</h1>`
+        })
+      },
+      async (customBaseUrl) => {
+        const res = await request(`${customBaseUrl}/unknown`);
+        assert.equal(res.status, 404);
+        assert.match(res.body, /Missing \/unknown/);
+      }
+    );
+  });
+
+  test('static assets can be disabled', async () => {
+    await withApp(
+      { publicDir: false, route: () => null },
+      async (customBaseUrl) => {
+        const res = await request(`${customBaseUrl}/styles.css`);
+        assert.equal(res.status, 404);
+      }
+    );
   });
 });

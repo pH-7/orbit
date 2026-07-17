@@ -3,9 +3,7 @@ import type { IncomingMessage, RequestListener, ServerResponse } from 'node:http
 import { stat } from 'node:fs/promises';
 import { extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { matchRoute } from './routes.js';
-import type { RouteResponse } from './types.js';
-
-const publicDir = resolve(process.cwd(), 'public');
+import type { OrbitAppOptions, OrbitRequest, RouteResponse } from './types.js';
 
 const contentTypes: Record<string, string> = {
   '.css': 'text/css; charset=utf-8',
@@ -23,7 +21,7 @@ function isInsideDirectory(directory: string, targetPath: string): boolean {
   return pathFromDirectory === '' || (!pathFromDirectory.startsWith('..') && !isAbsolute(pathFromDirectory));
 }
 
-function resolvePath(urlPath: string): string | null {
+function resolvePath(publicDir: string, urlPath: string): string | null {
   let pathname: string;
 
   try {
@@ -46,8 +44,13 @@ function send(response: ServerResponse, route: RouteResponse, includeBody = true
   response.end(includeBody ? route.body : undefined);
 }
 
-async function sendStaticAsset(pathname: string, response: ServerResponse, includeBody = true): Promise<boolean> {
-  const filePath = resolvePath(pathname);
+async function sendStaticAsset(
+  publicDir: string,
+  pathname: string,
+  response: ServerResponse,
+  includeBody = true
+): Promise<boolean> {
+  const filePath = resolvePath(publicDir, pathname);
 
   if (!filePath || !existsSync(filePath)) {
     return false;
@@ -72,10 +75,37 @@ async function sendStaticAsset(pathname: string, response: ServerResponse, inclu
   return true;
 }
 
-async function handleRequest(request: IncomingMessage, response: ServerResponse): Promise<void> {
+function defaultNotFoundResponse(): RouteResponse {
+  return {
+    status: 404,
+    headers: { 'content-type': 'text/plain; charset=utf-8' },
+    body: 'Orbit could not find that page.'
+  };
+}
+
+async function resolveNotFound(
+  notFound: OrbitAppOptions['notFound'],
+  context: OrbitRequest
+): Promise<RouteResponse> {
+  if (typeof notFound === 'function') {
+    return notFound(context);
+  }
+
+  return notFound ?? defaultNotFoundResponse();
+}
+
+async function handleRequest(
+  request: IncomingMessage,
+  response: ServerResponse,
+  options: OrbitAppOptions,
+  publicDir: string | null
+): Promise<void> {
   const method = request.method || 'GET';
   const url = new URL(request.url || '/', 'http://localhost');
-  const route = matchRoute(method, url.pathname);
+  const context = { method, request, url };
+  const route = options.route
+    ? await options.route(context)
+    : matchRoute(method, url.pathname);
   const includeBody = method !== 'HEAD';
 
   if (route) {
@@ -83,22 +113,25 @@ async function handleRequest(request: IncomingMessage, response: ServerResponse)
     return;
   }
 
-  const servedStaticAsset = await sendStaticAsset(url.pathname, response, includeBody);
+  const servedStaticAsset = publicDir
+    ? await sendStaticAsset(publicDir, url.pathname, response, includeBody)
+    : false;
 
   if (servedStaticAsset) {
     return;
   }
 
-  send(response, {
-    status: 404,
-    headers: { 'content-type': 'text/plain; charset=utf-8' },
-    body: 'Orbit could not find that page.'
-  });
+  send(response, await resolveNotFound(options.notFound, context), includeBody);
 }
 
-export function createApp(): RequestListener {
+export function createApp(options: OrbitAppOptions = {}): RequestListener {
+  const publicDir =
+    options.publicDir === false
+      ? null
+      : resolve(process.cwd(), options.publicDir ?? 'public');
+
   return (request, response) => {
-    void handleRequest(request, response).catch((error: unknown) => {
+    void handleRequest(request, response, options, publicDir).catch((error: unknown) => {
       const message = error instanceof Error ? error.message : 'Unexpected server error';
       response.writeHead(500, { 'content-type': 'application/json; charset=utf-8' });
       response.end(

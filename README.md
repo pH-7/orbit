@@ -45,6 +45,22 @@ pnpm add @ph7/orbit
 yarn add @ph7/orbit
 ```
 
+Create a server with your own routes:
+
+```ts
+import { createServer } from 'node:http';
+import { createApp } from '@ph7/orbit';
+
+const app = createApp({
+  route: ({ url }) =>
+    url.pathname === '/'
+      ? { status: 200, headers: { 'content-type': 'text/html' }, body: '<h1>Hello from Orbit</h1>' }
+      : null
+});
+
+createServer(app).listen(3000);
+```
+
 ## Run Locally
 
 Use Node.js 22 or newer. If you use a version manager, the project includes `.node-version`.
