@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { appConfig, resolvePort } from '../src/config.js';
+
+const packageJson = JSON.parse(
+  readFileSync(new URL('../../package.json', import.meta.url), 'utf8')
+) as { version: string };
 
 test('appConfig.name is Orbit', () => {
   assert.equal(appConfig.name, 'Orbit');
@@ -8,6 +13,10 @@ test('appConfig.name is Orbit', () => {
 
 test('appConfig.version follows semver format', () => {
   assert.match(appConfig.version, /^\d+\.\d+\.\d+$/);
+});
+
+test('appConfig.version matches the package version', () => {
+  assert.equal(appConfig.version, packageJson.version);
 });
 
 test('appConfig.port defaults to 3000', () => {
