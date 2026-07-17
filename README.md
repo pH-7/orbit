@@ -31,6 +31,20 @@ Orbit is intended to be open and accessible to anyone. The API responds with per
 - `/docs` starter documentation
 - `/api/status` JSON health and metadata endpoint
 
+## Install
+
+```bash
+npm install @ph7/orbit
+```
+
+```bash
+pnpm add @ph7/orbit
+```
+
+```bash
+yarn add @ph7/orbit
+```
+
 ## Run Locally
 
 Use Node.js 22 or newer. If you use a version manager, the project includes `.node-version`.
@@ -69,15 +83,6 @@ pnpm run build
 ## Continuous Integration
 
 GitHub Actions runs the build and test suite against Node.js 22 and 24 on every push to `main` and on pull requests. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
-
-## npm Publishing
-
-Configure npm trusted publishing for [`.github/workflows/publish.yml`](.github/workflows/publish.yml), then release with:
-
-```bash
-npm version patch
-git push origin main --follow-tags
-```
 
 ## Screenshots
 
