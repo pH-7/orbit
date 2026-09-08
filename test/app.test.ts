@@ -69,6 +69,9 @@ describe('HTTP integration tests', () => {
     const res = await request(`${baseUrl}/`);
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'] ?? '', /text\/html/);
+    assert.equal(res.headers['x-content-type-options'], 'nosniff');
+    assert.equal(res.headers['x-frame-options'], 'SAMEORIGIN');
+    assert.equal(res.headers['referrer-policy'], 'strict-origin-when-cross-origin');
     assert.match(res.body, /<!doctype html>/i);
   });
 
@@ -115,6 +118,7 @@ describe('HTTP integration tests', () => {
     const res = await request(`${baseUrl}/styles.css`);
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'] ?? '', /text\/css/);
+    assert.equal(res.headers['x-content-type-options'], 'nosniff');
     assert.match(res.body, /:root/);
   });
 
@@ -190,6 +194,26 @@ describe('HTTP integration tests', () => {
         const res = await request(`${customBaseUrl}/api/demo`);
         assert.equal(res.status, 200);
         assert.deepEqual(JSON.parse(res.body), { status: 'ok' });
+      }
+    );
+  });
+
+  test('route handler errors return a generic 500 response', async () => {
+    await withApp(
+      {
+        publicDir: false,
+        route: () => {
+          throw new Error('Database password is invalid');
+        }
+      },
+      async (customBaseUrl) => {
+        const res = await request(`${customBaseUrl}/`);
+        assert.equal(res.status, 500);
+        assert.deepEqual(JSON.parse(res.body), {
+          status: 'error',
+          message: 'Internal server error.'
+        });
+        assert.doesNotMatch(res.body, /Database password/);
       }
     );
   });

@@ -15,6 +15,12 @@ const contentTypes: Record<string, string> = {
   '.txt': 'text/plain; charset=utf-8'
 };
 
+const securityHeaders = {
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'SAMEORIGIN'
+};
+
 function isInsideDirectory(directory: string, targetPath: string): boolean {
   const pathFromDirectory = relative(directory, targetPath);
 
@@ -40,7 +46,7 @@ function resolvePath(publicDir: string, urlPath: string): string | null {
 }
 
 function send(response: ServerResponse, route: RouteResponse, includeBody = true): void {
-  response.writeHead(route.status, route.headers);
+  response.writeHead(route.status, { ...securityHeaders, ...route.headers });
   response.end(includeBody ? route.body : undefined);
 }
 
@@ -64,14 +70,16 @@ async function sendStaticAsset(
 
   const extension = extname(filePath);
   const contentType = contentTypes[extension] || 'application/octet-stream';
-  response.writeHead(200, { 'content-type': contentType });
+  response.writeHead(200, { ...securityHeaders, 'content-type': contentType });
 
   if (!includeBody) {
     response.end();
     return true;
   }
 
-  createReadStream(filePath).pipe(response);
+  const stream = createReadStream(filePath);
+  stream.once('error', () => response.destroy());
+  stream.pipe(response);
   return true;
 }
 
@@ -132,18 +140,18 @@ export function createApp(options: OrbitAppOptions = {}): RequestListener {
 
   return (request, response) => {
     void handleRequest(request, response, options, publicDir).catch((error: unknown) => {
-      const message = error instanceof Error ? error.message : 'Unexpected server error';
-      response.writeHead(500, { 'content-type': 'application/json; charset=utf-8' });
-      response.end(
-        JSON.stringify(
-          {
-            status: 'error',
-            message
-          },
-          null,
-          2
-        )
-      );
+      console.error('Orbit request failed:', error);
+
+      if (response.headersSent) {
+        response.end();
+        return;
+      }
+
+      response.writeHead(500, {
+        ...securityHeaders,
+        'content-type': 'application/json; charset=utf-8'
+      });
+      response.end(JSON.stringify({ status: 'error', message: 'Internal server error.' }, null, 2));
     });
   };
 }

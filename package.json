@@ -2,10 +2,21 @@
   "name": "@ph7/orbit",
   "version": "0.2.0",
   "description": "Orbit is a simple, efficient TypeScript web starter.",
+  "keywords": [
+    "typescript",
+    "web-framework",
+    "nodejs",
+    "starter",
+    "http-server"
+  ],
   "type": "module",
   "author": "Pierre-Henry Soria <hi@ph7.me> (https://ph7.me)",
   "license": "MIT",
   "homepage": "https://github.com/pH-7/orbit#readme",
+  "funding": {
+    "type": "ko_fi",
+    "url": "https://ko-fi.com/phenry"
+  },
   "bugs": {
     "url": "https://github.com/pH-7/orbit/issues"
   },
@@ -38,10 +49,10 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "prepack": "pnpm run build",
+    "prepack": "tsc -p tsconfig.json",
     "version": "node scripts/sync-version.mjs && git add src/config.ts",
-    "start": "pnpm run build && node dist/src/server.js",
-    "test": "pnpm run build && node --test dist/test/*.test.js"
+    "start": "tsc -p tsconfig.json && node dist/src/server.js",
+    "test": "tsc -p tsconfig.json && node --test dist/test/*.test.js"
   },
   "engines": {
     "node": ">=22"

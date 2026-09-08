@@ -12,7 +12,7 @@ Orbit is a simple, efficient TypeScript web starter built for anyone to use, ada
 Orbit now ships as a ready-to-use minimal application with:
 
 - strict TypeScript (latest)
-- PNPM as default package manager
+- npm, pnpm, and Yarn support
 - Node.js 22+ runtime targeting
 - multi-page routing
 - a public JSON API
@@ -63,17 +63,24 @@ createServer(app).listen(3000);
 
 ## Run Locally
 
-Use Node.js 22 or newer. If you use a version manager, the project includes `.node-version`.
+Use Node.js 22 or newer. If you use a version manager, the project includes `.node-version`. Install dependencies with your preferred package manager:
 
 ```bash
-pnpm install
-pnpm start
+npm install
+# or: pnpm install
+# or: yarn install
+```
+
+Start the application:
+
+```bash
+npm start
 ```
 
 By default the server binds to `127.0.0.1:3000`. Override it with `HOST` and `PORT` when needed:
 
 ```bash
-HOST=0.0.0.0 PORT=8080 pnpm start
+HOST=0.0.0.0 PORT=8080 npm start
 ```
 
 Use `PORT=0` if you want Node.js to pick an available port automatically.
@@ -81,19 +88,19 @@ Use `PORT=0` if you want Node.js to pick an available port automatically.
 For automatic reload during development:
 
 ```bash
-pnpm run dev
+npm run dev
 ```
 
 Run the test suite:
 
 ```bash
-pnpm test
+npm test
 ```
 
 Build without starting the server:
 
 ```bash
-pnpm run build
+npm run build
 ```
 
 ## Continuous Integration
