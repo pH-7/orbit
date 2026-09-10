@@ -3,7 +3,9 @@
 
 Turn any web application into a scalable, maintainable, and successful product
 
-![Orbit Project logo](assets/orbit-project-logo.svg)
+<p align="center">
+  <img src="assets/orbit-project-logo.svg" alt="Orbit Project logo" width="720" />
+</p>
 
 Orbit is a simple, efficient TypeScript web starter built for anyone to use, adapt, and contribute to.
 
