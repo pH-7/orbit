@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, writeFile, symlink, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { after, before, describe, test } from 'node:test';
 import { createServer, request as httpRequest, type Server } from 'node:http';
 import { createApp } from '../src/app.js';
@@ -246,4 +249,34 @@ describe('HTTP integration tests', () => {
       }
     );
   });
+});
+
+test('static assets cannot follow symlinks outside the public directory', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'orbit-static-'));
+  const publicDir = join(root, 'public');
+  await mkdir(publicDir);
+  await writeFile(join(root, 'outside.txt'), 'synthetic private fixture');
+  await writeFile(join(publicDir, 'inside.txt'), 'public fixture');
+  await symlink(join(root, 'outside.txt'), join(publicDir, 'outside-link.txt'));
+  await symlink(join(publicDir, 'inside.txt'), join(publicDir, 'inside-link.txt'));
+  await symlink(publicDir, join(root, 'public-alias'));
+
+  try {
+    await withApp({ publicDir, route: () => null }, async (url) => {
+      for (const method of ['GET', 'HEAD']) {
+        const escaped = await request(`${url}/outside-link.txt`, method);
+        assert.equal(escaped.status, 404);
+        assert.doesNotMatch(escaped.body, /synthetic private fixture/);
+      }
+      const inside = await request(`${url}/inside-link.txt`);
+      assert.equal(inside.status, 200);
+      assert.equal(inside.body, 'public fixture');
+    });
+    await withApp({ publicDir: join(root, 'public-alias'), route: () => null }, async (url) => {
+      assert.equal((await request(`${url}/inside.txt`)).status, 200);
+      assert.equal((await request(`${url}/outside-link.txt`)).status, 404);
+    });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

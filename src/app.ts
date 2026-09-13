@@ -1,6 +1,6 @@
-import { createReadStream, existsSync } from 'node:fs';
+import { createReadStream } from 'node:fs';
 import type { IncomingMessage, RequestListener, ServerResponse } from 'node:http';
-import { stat } from 'node:fs/promises';
+import { realpath, stat } from 'node:fs/promises';
 import { extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { matchRoute } from './routes.js';
 import type { OrbitAppOptions, OrbitRequest, RouteResponse } from './types.js';
@@ -58,11 +58,21 @@ async function sendStaticAsset(
 ): Promise<boolean> {
   const filePath = resolvePath(publicDir, pathname);
 
-  if (!filePath || !existsSync(filePath)) {
+  if (!filePath) {
     return false;
   }
 
-  const fileStats = await stat(filePath).catch(() => null);
+  // Lexical containment alone does not prevent an asset symlink escaping.
+  const [realPublicDir, realFilePath] = await Promise.all([
+    realpath(publicDir).catch(() => null),
+    realpath(filePath).catch(() => null)
+  ]);
+
+  if (!realPublicDir || !realFilePath || !isInsideDirectory(realPublicDir, realFilePath)) {
+    return false;
+  }
+
+  const fileStats = await stat(realFilePath).catch(() => null);
 
   if (!fileStats?.isFile()) {
     return false;
@@ -77,7 +87,7 @@ async function sendStaticAsset(
     return true;
   }
 
-  const stream = createReadStream(filePath);
+  const stream = createReadStream(realFilePath);
   stream.once('error', () => response.destroy());
   stream.pipe(response);
   return true;
